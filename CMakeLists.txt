@@ -11,6 +11,14 @@ list(APPEND CMAKE_CXX_FLAGS "-O3")
 
 include(CMakePrintHelpers)
 
+include(TestBigEndian)
+test_big_endian(IS_BIG_ENDIAN)
+if(IS_BIG_ENDIAN)
+    message(FATAL_ERROR "System is of Big Endian")
+else()
+    message(STATUS "IS_BIG_ENDIAN=${IS_BIG_ENDIAN}, little endian")
+endif(IS_BIG_ENDIAN)
+
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     message(STATUS "Set up ccache ...")
