@@ -26,11 +26,15 @@ include(GetPybind11)
 include(GetVDT)
 
 add_subdirectory(src)
-add_subdirectory(tests)
 
-# include(CTest)
-# enable_testing()
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+    if(BUILD_TESTING)
+        add_subdirectory(tests)
+    endif(BUILD_TESTING)
 
-# set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-# set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-# include(CPack)
+    add_test(
+        NAME test_import_vdt
+        COMMAND $<TARGET_FILE:test_vdt>
+    )
+endif()
