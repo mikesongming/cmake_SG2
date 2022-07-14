@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.15)
+project(cmake_sg2 VERSION 0.1.0)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+list(APPEND CMAKE_C_FLAGS "-O3")
+list(APPEND CMAKE_CXX_FLAGS "-O3")
+
+include(CMakePrintHelpers)
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message(STATUS "Set up ccache ...")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) # Less useful to do it for linking, see edit2
+endif(CCACHE_FOUND)
+
+
+# Fetch third-party libraries
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL "Disable updating fetched content")
+include(GetPybind11)
+include(GetVDT)
+
+add_subdirectory(src)
+add_subdirectory(tests)
+
+# include(CTest)
+# enable_testing()
+
+# set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+# set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+# include(CPack)
