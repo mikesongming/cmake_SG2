@@ -19,6 +19,10 @@ else()
     message(STATUS "IS_BIG_ENDIAN=${IS_BIG_ENDIAN}, little endian")
 endif(IS_BIG_ENDIAN)
 
+find_program(NASM_FOUND nasm
+    REGISTRY_VIEW 64
+    REQUIRED)
+
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     message(STATUS "Set up ccache ...")
@@ -31,6 +35,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL "Disable updating fetched content")
 include(GetPybind11)
 include(GetVDT)
+
+set(sg2_RESOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/resources")
+# list(APPEND sg2_HEADERS
+    
+# )
 
 add_subdirectory(src)
 
