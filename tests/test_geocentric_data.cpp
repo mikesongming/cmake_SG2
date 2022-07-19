@@ -1,4 +1,5 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
 
 #if defined(SG2_RESOURCES)
 
@@ -72,14 +73,14 @@ TEST_CASE("Geocentric data IO by NASM", "[sg2][nasm]")
             double sinL, cosL, R;
             std::tie(sinL, cosL, R) = gc_data.top10_records[i];
             
-            REQUIRE(sg2::_geocentric_data_sinL(i) == Approx(sinL).margin(1e-8));
-            REQUIRE(sg2::_geocentric_data_cosL(i) == Approx(cosL).margin(1e-8));
-            REQUIRE(sg2::_geocentric_data_R(i) == Approx(R).margin(1e-8));
+            REQUIRE(sg2::_geocentric_data_sinL(i) == Catch::Approx(sinL).margin(1e-8));
+            REQUIRE(sg2::_geocentric_data_cosL(i) == Catch::Approx(cosL).margin(1e-8));
+            REQUIRE(sg2::_geocentric_data_R(i) == Catch::Approx(R).margin(1e-8));
 
             auto t = sg2::_geocentric_data_tuple(i);
-            REQUIRE(std::get<0>(t) == Approx(sinL).margin(1e-8));
-            REQUIRE(std::get<1>(t) == Approx(cosL).margin(1e-8));
-            REQUIRE(std::get<2>(t) == Approx(R).margin(1e-8));
+            REQUIRE(std::get<0>(t) == Catch::Approx(sinL).margin(1e-8));
+            REQUIRE(std::get<1>(t) == Catch::Approx(cosL).margin(1e-8));
+            REQUIRE(std::get<2>(t) == Catch::Approx(R).margin(1e-8));
         }
     }
     SECTION("NASM read valid 'sinL', 'cosL'")
@@ -88,7 +89,7 @@ TEST_CASE("Geocentric data IO by NASM", "[sg2][nasm]")
         {
             double sinL = sg2::_geocentric_data_sinL(i);
             double cosL = sg2::_geocentric_data_cosL(i);
-            REQUIRE(sinL*sinL+cosL*cosL == Approx(1));
+            REQUIRE(sinL*sinL+cosL*cosL == Catch::Approx(1));
         }
     }
 }

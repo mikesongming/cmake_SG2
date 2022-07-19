@@ -1,6 +1,7 @@
 /*
- * Copyright 2021 MINES ParisTech
- * Copyright 2021 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
+ * Copyright 2011-2021 MINES ParisTech
+ * Copyright 2011 Philippe Blanc <philippe.blanc@mines-paristech.fr>
+ * Copyright 2014-2021 Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
  *
  * This file is part of libsg2.
  *
@@ -19,11 +20,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "sg2_data_handler.hxx"
+
+#include "sg2_topocentric.h"
 
 namespace sg2 {
 
 
-
 } // namespace sg2
-

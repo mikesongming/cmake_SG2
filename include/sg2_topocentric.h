@@ -23,10 +23,10 @@
 #ifndef SG2_TOPOCENTRIC_HXX_
 #define SG2_TOPOCENTRIC_HXX_
 
-#include "sg2_typedef.hxx"
-#include "sg2_geocentric.hxx"
-#include "sg2_geopoint.hxx"
-#include "sg2_math.hxx"
+#include "sg2_typedef.h"
+#include "sg2_geocentric.h"
+#include "sg2_geopoint.h"
+#include "sg2_math.h"
 
 #include <cmath>
 #include <cstdlib>

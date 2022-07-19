@@ -20,20 +20,16 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SG2_H_
-#define SG2_H_
+#include "sg2_date.h"
+#include "sg2_err.h"
 
-#include "sg2_typedef.hxx"
-#include "sg2_date.hxx"
-#include "sg2_geocentric.hxx"
-#include "sg2_topocentric.hxx"
-
-#include <tuple>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include "sg2_utils.h"
 
 namespace sg2 {
 
-std::tuple<date, date, date> sunrise(date const &, geopoint const &);
 
 }
-
-#endif /* SG2_H_ */

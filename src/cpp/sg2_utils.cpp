@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "sg2_utils.hxx"
+#include "sg2_utils.h"
 
 
 namespace sg2 {

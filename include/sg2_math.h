@@ -66,7 +66,7 @@ inline static double atan(double x) {
 
 #else
 
-#include <vdt/vdtMath.h>
+#include "vdtMath.h"
 
 namespace sg2 {
 

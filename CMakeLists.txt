@@ -9,6 +9,8 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 list(APPEND CMAKE_C_FLAGS "-O3")
 list(APPEND CMAKE_CXX_FLAGS "-O3")
 
+option(sg2_USE_VDT "Use VDT to accelerate trigonometric functions" OFF)
+
 include(CMakePrintHelpers)
 
 include(TestBigEndian)
@@ -34,15 +36,27 @@ endif(CCACHE_FOUND)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL "Disable updating fetched content")
 include(GetPybind11)
-include(GetVDT)
 include(GetCatch2)
+if(sg2_USE_VDT)
+    include(GetVDT)
+endif()
+
+message("SG2")
+cmake_print_variables(sg2_USE_VDT)
 
 set(sg2_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(sg2_CPP_DIR "${CMAKE_CURRENT_LIST_DIR}/src/cpp")
-set(sg2_RESOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/resources")
-# list(APPEND sg2_HEADERS
-    
-# )
+set(sg2_INCLUDE_DIR ${sg2_DIR}/include)
+set(sg2_CPP_DIR "${sg2_DIR}/src/cpp")
+set(sg2_RESOURCES_DIR "${sg2_DIR}/resources")
+list(APPEND sg2_HEADERS
+    include/sg2.h
+    include/sg2_typedef.h
+    include/sg2_date.h
+    include/sg2_topocentric.h
+    include/sg2_geocentric.h
+    include/sg2_math.h
+    include/sg2_err.h
+)
 
 add_subdirectory(src)
 

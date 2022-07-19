@@ -23,8 +23,8 @@
 #ifndef SRC_SG2_GEOPOINT_HXX_
 #define SRC_SG2_GEOPOINT_HXX_
 
-#include "sg2_typedef.hxx"
-#include "sg2_math.hxx"
+#include "sg2_typedef.h"
+#include "sg2_math.h"
 
 namespace sg2 {
 

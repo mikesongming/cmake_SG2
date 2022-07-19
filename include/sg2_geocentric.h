@@ -23,11 +23,11 @@
 #ifndef SG2_GEOCENTRIC_HXX_
 #define SG2_GEOCENTRIC_HXX_
 
-#include "sg2_typedef.hxx"
-#include "sg2_date.hxx"
-#include "sg2_err.hxx"
+#include "sg2_typedef.h"
+#include "sg2_date.h"
+#include "sg2_err.h"
 
-#include "sg2_math.hxx"
+#include "sg2_math.h"
 
 namespace sg2 {
 

@@ -20,10 +20,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "sg2_geocentric.hxx"
-#include "sg2_err.hxx"
-#include "sg2_data_handler.hxx"
-#include "sg2_utils.hxx"
+#include "sg2_geocentric.h"
+#include "sg2_err.h"
+#include "sg2_geocentric_data.hpp"
+#include "sg2_utils.h"
 
 #include <tuple>
 

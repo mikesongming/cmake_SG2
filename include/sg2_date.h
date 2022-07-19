@@ -23,8 +23,8 @@
 #ifndef SG2_DATE_HXX_
 #define SG2_DATE_HXX_
 
-#include "sg2_typedef.hxx"
-#include "sg2_err.hxx"
+#include "sg2_typedef.h"
+#include "sg2_err.h"
 
 #include <cstdint>
 #include <cmath>
