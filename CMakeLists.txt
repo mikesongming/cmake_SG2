@@ -35,7 +35,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL "Disable updating fetched content")
 include(GetPybind11)
 include(GetVDT)
+include(GetCatch2)
 
+set(sg2_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(sg2_CPP_DIR "${CMAKE_CURRENT_LIST_DIR}/src/cpp")
 set(sg2_RESOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/resources")
 # list(APPEND sg2_HEADERS
     

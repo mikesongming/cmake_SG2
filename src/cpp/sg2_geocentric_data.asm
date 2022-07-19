@@ -2,7 +2,7 @@
 ; extern "C" int64_t _sg2_gc_delta()
 ; extern "C" int64_t _sg2_gc_count()
 ;
-; Description:  get metadata of the binary file geometric.data
+; Description:  get metadata of the binary file geocentric.data
 ;
 ; extern "C" void _sg2_gc_sinL(unsigned l)
 ; extern "C" void _sg2_gc_cosL(unsigned l)

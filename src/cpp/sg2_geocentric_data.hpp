@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <cstdio>
 #include <tuple>
 
 extern "C" {
@@ -18,38 +17,38 @@ extern "C" {
 namespace sg2
 {
 
-inline int64_t _geometric_data_byte_size() {
+inline int64_t _geocentric_data_byte_size() {
     return _sg2_gc_data_sz();
 }
 
-inline int64_t _geometric_data_offset() {
+inline int64_t _geocentric_data_offset() {
     return _sg2_gc_offset();
 }
 
-inline int64_t _geometric_data_offset() {
+inline int64_t _geocentric_data_delta() {
     return _sg2_gc_delta();
 }
 
-inline int64_t _geometric_data_offset() {
+inline int64_t _geocentric_data_count() {
     return _sg2_gc_count();
 }
 
-inline double _geometric_data_sinL(unsigned l)
+inline double _geocentric_data_sinL(unsigned l)
 {
     return _sg2_gc_sinL(l);
 }
 
-inline double _geometric_data_cosL(unsigned l)
+inline double _geocentric_data_cosL(unsigned l)
 {
     return _sg2_gc_cosL(l);
 }
 
-inline double _geometric_data_R(unsigned l)
+inline double _geocentric_data_R(unsigned l)
 {
     return _sg2_gc_R(l);
 }
 
-inline std::tuple<double, double, double> _geometric_data_tuple(unsigned l)
+inline std::tuple<double, double, double> _geocentric_data_tuple(unsigned l)
 {
     int64_t* tp = _sg2_gc_tuple(l);
     return std::make_tuple(
