@@ -8,5 +8,6 @@ target_link_libraries(catch2_tests PRIVATE sg2)
 target_compile_definitions(catch2_tests PUBLIC "-DSG2_RESOURCES=${sg2_RESOURCES_DIR}")
 target_link_directories(catch2_tests INTERFACE ${sg2_CPP_DIR})
 
-add_executable(test_vdt test_vdt.cpp)
-target_link_libraries(test_vdt PRIVATE vdt::vdt)
+# test vdt available
+target_sources(catch2_tests PRIVATE test_vdt.cpp)
+target_link_libraries(catch2_tests PRIVATE vdt::vdt)

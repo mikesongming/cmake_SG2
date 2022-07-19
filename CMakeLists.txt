@@ -53,7 +53,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif(BUILD_TESTING)
 
     add_test(
-        NAME test_import_vdt
-        COMMAND $<TARGET_FILE:test_vdt>
+        NAME catch2_tests
+        COMMAND $<TARGET_FILE:catch2_tests>
     )
 endif()
