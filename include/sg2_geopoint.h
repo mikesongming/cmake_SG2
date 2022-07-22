@@ -35,7 +35,7 @@ struct ellps
 
     ellps() = default;
     ellps(ellps const &) = default;
-    ellps(double a, double f);
+    ellps(double a, double f): a(a), f(f) {};
 };
 
 

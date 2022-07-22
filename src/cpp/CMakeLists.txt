@@ -30,3 +30,7 @@ if(sg2_USE_VDT)
     target_compile_definitions(sg2 PUBLIC "-DSG2_HAVE_VDT")
     target_link_libraries(sg2 PRIVATE vdt::vdt)
 endif()
+
+if(sg2_BUILD_APPS)
+    add_subdirectory(util)
+endif()

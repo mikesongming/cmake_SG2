@@ -42,14 +42,15 @@ struct geocentric_data {
     double EOT;        /* Equation of Time (rad) : difference between apparent solar time and mean solar time */
 
     geocentric_data() = default;
-    geocentric_data(date const & ut);
-    geocentric_data(date const & ut, date const & tt);
+    explicit geocentric_data(date const & ut) noexcept;
+    geocentric_data(date const & ut, date const & tt) noexcept;
 
     geocentric_data(geocentric_data const &) = default;
 
     auto operator=(geocentric_data const &) -> geocentric_data & = default;
 
-    void _init_all();
+    void _init_all() noexcept;
+    void _nan_all() noexcept;
 
 };
 

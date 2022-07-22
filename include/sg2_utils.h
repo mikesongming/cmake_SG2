@@ -22,14 +22,15 @@
 #ifndef SRC_SG2_UTILS_HXX_
 #define SRC_SG2_UTILS_HXX_
 
+#include "sg2_constants.h"
 #include "sg2_math.h"
 
 #include <array>
 
 namespace sg2 {
 
-// inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
-// inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
+inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
+inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
 
 template<int const N>
 struct sinusoidal_approx {

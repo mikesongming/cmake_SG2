@@ -24,9 +24,14 @@
 #define SG2_DATE_HXX_
 
 #include <cstdint>
-#include <string>
+#include <iostream>
 
 namespace sg2 {
+
+int _date_leapyear(int year);
+int _ymd_to_julian_day(int year, int month, int day);
+void _julian_day_to_ymd(int jd, int & year, int & month, int & day);
+
 
 struct date;
 struct julian;
@@ -36,14 +41,25 @@ struct ydoyh;
 struct date {
     int64_t msec; // millisecond since 1970
 
-    date() = default;
-    date(int64_t msec): msec(msec) {};
+    date(): msec{std::numeric_limits<int64_t>::min()} {};
+    date(int64_t msec): msec{msec} {};
     date(double jd);
     date(ymdh const & d);
     date(ydoyh const & d);
 
-    operator std::string() const;
+    bool operator ==(date const & x) const;
+    bool operator <=(date const & x) const;
+    bool operator >=(date const & x) const;
+    bool operator <(date const & x) const;
+    bool operator >(date const & x) const;
+
+    bool isnat() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const date& d);
 };
+
+// not a time constant
+static date const nat;
 
 struct julian {
     double value; // julian date in factionnal days
@@ -53,6 +69,8 @@ struct julian {
     julian(ymdh const & d);
     julian(ydoyh const & d);
     julian(date const d);
+
+    friend std::ostream& operator<<(std::ostream& os, const julian& t);
 };
 
 /* Date YMD + H en heure décimale UT */
@@ -67,6 +85,8 @@ struct ymdh {
     ymdh(double jd);
     ymdh(date const & d);
     ymdh(ydoyh const & p_ydoyh);
+
+    friend std::ostream& operator<<(std::ostream& os, const ymdh& t);
 };
 
 struct ymdhmsn {
@@ -81,7 +101,7 @@ struct ymdhmsn {
     ymdhmsn() = default;
     ymdhmsn(date const date);
 
-    operator std::string() const;
+    friend std::ostream& operator<<(std::ostream& os, const ymdhmsn& t);
 };
 
 struct ydoyh {
@@ -91,6 +111,8 @@ struct ydoyh {
 
     ydoyh() = default;
     ydoyh(ymdh const & p_ymdh);
+
+    friend std::ostream& operator<<(std::ostream& os, const ydoyh& t);
 };
 
 }

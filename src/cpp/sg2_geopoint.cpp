@@ -27,8 +27,6 @@
 
 namespace sg2 {
 
-ellps::ellps(double a, double f) : a(a), f(f) {};
-
 ellps const ELLPS_WGS84  = { 6378137.0, 3.352810664747481e-003 }; /* WGS84 */
 ellps const ELLPS_RGF83  = { 6378137.0, 3.352810681182319e-003 }; /* RFG83 */
 ellps const ELLPS_NTF    = { 6378249.2, 3.407549520015651e-003 }; /* NTF / CLARKE1880 */
@@ -37,7 +35,7 @@ ellps const ELLPS_SPA    = { 6378140.0, 3.352810000000000e-003 }; /* SPA */
 ellps const ELLPS_NGP    = { 6378169.0, 3.384231430681783e-003 }; /* NGP*/
 ellps const ELLPS_SPHERE = { 6378130.0, 0.0                    }; /* SPHERE */
 
-geopoint::geopoint(double lon, double lat, double h, ellps const & ellipse) :
+geopoint::geopoint(double lon, double lat, double h, ellps const & ellipse):
 ellipse{ellipse}, lambda{RAD(lon)}, phi{RAD(lat)}, h{h}
 {
     double a = ellipse.a;

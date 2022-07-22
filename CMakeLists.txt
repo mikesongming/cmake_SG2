@@ -10,6 +10,7 @@ list(APPEND CMAKE_C_FLAGS "-O3")
 list(APPEND CMAKE_CXX_FLAGS "-O3")
 
 option(sg2_USE_VDT "Use VDT to accelerate trigonometric functions" OFF)
+option(sg2_BUILD_APPS "build sg2_benchmark/sg2_convert_date/sg2_query" ON)
 
 include(CMakePrintHelpers)
 
@@ -43,6 +44,7 @@ endif()
 
 message("SG2")
 cmake_print_variables(sg2_USE_VDT)
+cmake_print_variables(sg2_BUILD_APPS)
 
 set(sg2_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(sg2_INCLUDE_DIR ${sg2_DIR}/include)
@@ -66,7 +68,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif(BUILD_TESTING)
 
     add_test(
-        NAME catch2_tests
-        COMMAND $<TARGET_FILE:catch2_tests>
+        NAME sg2_tests
+        COMMAND $<TARGET_FILE:sg2_tests>
     )
 endif()

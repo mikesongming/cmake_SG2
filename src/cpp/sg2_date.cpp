@@ -26,19 +26,19 @@
 #include "sg2_utils.h"
 #include "sg2_err.h"
 
-#include <array>
 #include <cmath>
-#include <cstdio>
+#include <iomanip>
+#include <limits>
 
 
 namespace sg2 {
 
-inline int _date_leapyear(int year) {
+int _date_leapyear(int year) {
     return (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)));
 }
 
 /* return the julian day at 12h */
-inline int _ymd_to_julian_day(int year, int month, int day)
+int _ymd_to_julian_day(int year, int month, int day)
 {
     int k;
     double Y, M, D, H;
@@ -55,7 +55,7 @@ inline int _ymd_to_julian_day(int year, int month, int day)
             + floor(Y / 4.0) - floor(Y / 100.0) + floor(Y / 400.0);
 }
 
-inline void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
+void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
 {
     double H, L, N, I, J, K;
 
@@ -80,20 +80,70 @@ inline void _julian_day_to_ymd(int jd, int & year, int & month, int & day)
 
 date::date(double jd)
 {
-    msec = (jd-EPOCH_JD)*24.0*60.0*60.0*1e3;
+    if (std::isfinite(jd)) 
+        msec = static_cast<int64_t>(
+            std::round((jd-EPOCH_JD)*(24.0*60.0*60.0*1e3)));
+    else
+        msec = nat.msec;
 }
 
 date::date(ymdh const & d)
 {
     int64_t xjd = _ymd_to_julian_day(d.year, d.month, d.day_of_month);
-    msec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000LL) + d.hour*60.0*60.0*1e3;
+    msec = (xjd-EPOCH_JD)*(24LL*60LL*60LL*1000LL) + (d.hour-12.0)*60.0*60.0*1e3;
 }
 
-date::date(ydoyh const & d): date(ymdh(d)) {};
+date::date(ydoyh const & d): date{ymdh{d}} {};
 
-date::operator std::string() const
+bool date::operator ==(date const & x) const
 {
-    return static_cast<std::string>(ymdhmsn{*this});
+    // NAT always equal to nothing else
+    if (this->isnat() || x.isnat())
+        return false;
+    return this->msec == x.msec;
+}
+
+bool date::operator <=(date const & x) const
+{
+    // NAT always equal to nothing else
+    if (this->isnat() || x.isnat())
+        return false;
+    return this->msec <= x.msec;
+}
+
+bool date::operator >=(date const & x) const
+{
+    // NAT always equal to nothing else
+    if (this->isnat() || x.isnat())
+        return false;
+    return this->msec >= x.msec;
+}
+
+bool date::operator <(date const & x) const
+{
+    // NAT always equal to nothing else
+    if (this->isnat() || x.isnat())
+        return false;
+    return this->msec < x.msec;
+}
+
+bool date::operator >(date const & x) const
+{
+    // NAT always equal to nothing else
+    if (this->isnat() || x.isnat())
+        return false;
+    return this->msec > x.msec;
+}
+
+bool date::isnat() const
+{
+    return msec == nat.msec;
+}
+
+std::ostream& operator<<(std::ostream& os, const date& d)
+{
+    os << (ymdhmsn{d});
+    return os;
 }
 
 julian::julian(ymdh const & d)
@@ -102,11 +152,17 @@ julian::julian(ymdh const & d)
     value = xjd - 0.5 + d.hour / 24.0;
 }
 
-julian::julian(ydoyh const & d): julian(ymdh(d)) {};
+julian::julian(ydoyh const & d): julian{ymdh{d}} {};
 
 julian::julian(date const d)
 {
     value = d.msec/(24.0*60.0*60.0*1e3)+EPOCH_JD;
+}
+
+std::ostream& operator<<(std::ostream& os, const julian& t)
+{
+    os << std::fixed << std::setprecision(9) << t.value;
+    return os;
 }
 
 ymdh::ymdh(short year, short month, char day_of_month, double hour):
@@ -122,7 +178,7 @@ ymdh::ymdh(date const & d)
 {
     int jd = d.msec / (1e3 * 60.0 * 60.0 * 24.0) + EPOCH_JD + 0.5;
     _julian_day_to_ymd(jd, year, month, day_of_month);
-    hour = static_cast<double>(d.msec % 1000LL)/(60.0*60.0*1e3);
+    hour = static_cast<double>(d.msec % (1000LL*60LL*60LL*24LL))/(60.0*60.0*1e3);
 }
 
 ymdh::ymdh(ydoyh const & p_ydoyh)
@@ -148,6 +204,19 @@ ymdh::ymdh(ydoyh const & p_ydoyh)
     }
 }
 
+std::ostream& operator<<(std::ostream& os, const ymdh& t)
+{
+    os << std::setfill(('0')) << std::setw(4)
+            << t.year << "-"
+       << std::setfill(('0')) << std::setw(2)
+            << t.month << "-" 
+       << std::setfill(('0')) << std::setw(2)
+            << t.day_of_month << " "
+       << std::setprecision(9) << t.hour;
+    
+    return os;
+}
+
 ymdhmsn::ymdhmsn(date const date)
 {
     int64_t xnsec = date.msec;
@@ -168,11 +237,24 @@ ymdhmsn::ymdhmsn(date const date)
 
 }
 
-ymdhmsn::operator std::string() const
+std::ostream& operator<<(std::ostream& os, const ymdhmsn& t)
 {
-    std::array<char, 32> buf;
-    snprintf(&buf[0], buf.size(), "%04d-%02d-%02dT%02d:%02d:%02d.%03d", year, month, day_of_month, hour, min, sec, msec);
-    return std::string(&buf[0]);
+    os << std::setfill(('0')) << std::setw(4)
+            << t.year << "-"
+       << std::setfill(('0')) << std::setw(2)
+            << t.month << "-" 
+       << std::setfill(('0')) << std::setw(2)
+            << t.day_of_month << "T"
+       << std::setfill(('0')) << std::setw(2)
+            << t.hour << ":"
+       << std::setfill(('0')) << std::setw(2)
+            << t.min << ":"
+       << std::setfill(('0')) << std::setw(2)
+            << t.sec << "."
+       << std::setfill(('0')) << std::setw(3)
+            << t.msec;
+    
+    return os;
 }
 
 ydoyh::ydoyh(ymdh const & p_ymdh)
@@ -186,6 +268,17 @@ ydoyh::ydoyh(ymdh const & p_ymdh)
     day_of_year = (short) floor(275.0 * ((double) p_ymdh.month) / 9.0)
             - K * ((double) (p_ymdh.month > 2)) + ((double) p_ymdh.day_of_month)
             - 30.0;
+}
+
+std::ostream& operator<<(std::ostream& os, const ydoyh& t)
+{
+    os << std::setfill(('0')) << std::setw(4)
+            << t.year << "-"
+       << std::setfill(('0')) << std::setw(3)
+            << t.day_of_year << " "
+       << std::setprecision(9) << t.hour;
+    
+    return os;
 }
 
 }

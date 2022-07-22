@@ -25,11 +25,23 @@
 #include "sg2_constants.h"
 #include "sg2_math.h"
 
+#include <limits>
 
 namespace sg2 {
 
 topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint const & gp)
 {
+    if (!std::isfinite(geoc.R)) {
+        r_alpha = std::numeric_limits<double>::quiet_NaN();
+        delta = std::numeric_limits<double>::quiet_NaN();
+        omega = std::numeric_limits<double>::quiet_NaN();
+        gamma_S0 = std::numeric_limits<double>::quiet_NaN();
+        alpha_S = std::numeric_limits<double>::quiet_NaN();
+        toa_ni = std::numeric_limits<double>::quiet_NaN();
+        toa_hi = std::numeric_limits<double>::quiet_NaN();
+        return;
+    }
+
     double xi = (gp.ellipse.a / AU);
 
     double omega_g_kp_kd = geoc.nu - geoc.r_alpha + gp.lambda;
@@ -64,29 +76,6 @@ topocentric_data::topocentric_data(geocentric_data const & geoc, geopoint const 
     }
 }
 
-double topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T);
-double topocentric_correction_refraction_ZIM(double const gamma_S0, double const P, double const T);
-
-double topocentric_data::topocentric_correction_refraction(double const P,
-        double const T, correction_refraction_e method) const
-{
-    switch (method) {
-    case REFRACTION_SAE:
-        return topocentric_correction_refraction_SAE(gamma_S0, P, T);
-        break;
-    case REFRACTION_ZIM:
-        return topocentric_correction_refraction_ZIM(gamma_S0, P, T);
-        break;
-    case REFRACTION_NONE:
-        return gamma_S0;
-        break;
-    default:
-        return NAN;
-        break;
-    }
-}
-
-
 double topocentric_correction_refraction_SAE(double const gamma_S0, double const P, double const T)
 {
     double const gamma_S0_seuil = -0.010035643198967;
@@ -113,25 +102,37 @@ double topocentric_correction_refraction_ZIM(double const gamma_S0, double const
     static const double R = 0.029614018235657;
     /*(tan(gamma_S0_seuil + 0.0031376 / (gamma_S0_seuil+ 0.089186))) */
     double K;
-    double tan_gamma_S0 = 0.0;
-    double gamma_S0_2 = 0.0, gamma_S0_3 = 0.0, gamma_S0_4 = 0.0;
-    unsigned long k;
+    double tan_gamma_S0 = math::tan(gamma_S0);
 
     K = (P / 1013.0) * (283. / (273. + T)) * 4.848136811095360e-006;
 
     if (gamma_S0 <= -0.010036) {
-        return gamma_S0 + (-20.774 / tan_gamma_S0) * K;
+        return gamma_S0 + K * (-20.774 / tan_gamma_S0);
     } else if (gamma_S0 <= 0.087266) {
-        gamma_S0_2 = gamma_S0 * gamma_S0;
-        gamma_S0_3 = gamma_S0_2 * gamma_S0;
-        gamma_S0_4 = gamma_S0_4 * gamma_S0;
-        return gamma_S0
-                + (1735 - 2.969067e4 * gamma_S0 + 3.394422e5 * gamma_S0_2
-                + -2.405683e6 * gamma_S0_3 + 7.66231727e6 * gamma_S0_4) * K;
+        return gamma_S0 + K * polyval(gamma_S0, 7.66231727e6, -2.405683e6, 3.394422e5, -2.969067e4, 1735.0);
     } else if (gamma_S0 <= 1.483529864195180) {
-        return gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07 / pow(tan_gamma_S0, 3.0) + 0.000086 / pow(tan_gamma_S0, 5.0));
+        return gamma_S0 + K * (58.1 / tan_gamma_S0 - 0.07 / ipow<3>(tan_gamma_S0) + 0.000086 / ipow<5>(tan_gamma_S0));
     } else {
         return NAN;
+    }
+}
+
+double topocentric_data::topocentric_correction_refraction(double const P,
+        double const T, correction_refraction_e method) const
+{
+    switch (method) {
+    case REFRACTION_SAE:
+        return topocentric_correction_refraction_SAE(gamma_S0, P, T);
+        break;
+    case REFRACTION_ZIM:
+        return topocentric_correction_refraction_ZIM(gamma_S0, P, T);
+        break;
+    case REFRACTION_NONE:
+        return gamma_S0;
+        break;
+    default:
+        return NAN;
+        break;
     }
 }
 
