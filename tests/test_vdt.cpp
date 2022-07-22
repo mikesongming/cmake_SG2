@@ -9,7 +9,7 @@ using Catch::Matchers::Approx;
 
 SCENARIO("compare VDT and libm outputs", "[vdt][approx]")
 {
-    constexpr unsigned size = 10;
+    const unsigned size = 10;
     auto direct_dpvals_g = GENERATE(chunk(size, take(size, random(-10.0, 10.0))));
     auto inverse_dpvals_g = GENERATE(chunk(size, take(size, random(-1.0, 1.0))));
     auto direct_spvals_g = GENERATE(chunk(size, take(size, random(-10.0f, 10.0f))));
@@ -30,7 +30,7 @@ SCENARIO("compare VDT and libm outputs", "[vdt][approx]")
 
     GIVEN("acos") {
         WHEN("double precision margin 1e-9") {
-            constexpr double dp_margin = 1e-9;
+            const double dp_margin = 1e-9;
             vdt::fast_acosv(size, inverse_dpvals, res_dp);
 
             std::vector<double> vdt_res_dp(res_dp, res_dp+size);
@@ -42,7 +42,7 @@ SCENARIO("compare VDT and libm outputs", "[vdt][approx]")
         }
 
         WHEN("single precision margin 1e-9") {
-            constexpr float sp_margin = 1e-9;
+            const float sp_margin = 1e-9;
             vdt::fast_acosfv(size, inverse_spvals, res_sp);
 
             std::vector<float> vdt_res_sp(res_sp, res_sp+size);
@@ -57,7 +57,7 @@ SCENARIO("compare VDT and libm outputs", "[vdt][approx]")
 
 SCENARIO("benchmark VDT and libm", "[vdt][benchmark]")
 {
-    constexpr unsigned size = 10;
+    const unsigned size = 10;
     auto direct_dpvals_g = GENERATE(chunk(size, take(size, random(-10.0, 10.0))));
     auto inverse_dpvals_g = GENERATE(chunk(size, take(size, random(-1.0, 1.0))));
     auto direct_spvals_g = GENERATE(chunk(size, take(size, random(-10.0f, 10.0f))));

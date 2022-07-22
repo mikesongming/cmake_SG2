@@ -44,11 +44,11 @@ int main(int argc, char ** argv)
 			return 1;
 		}
 
-		jd = sg2::julian{atof(argv[2])};
-		d = sg2::date{jd.value};
-		ymdh = sg2::ymdh{jd.value};
-		ymdhmsn = sg2::ymdhmsn{d};
-		ydoyh = sg2::ydoyh{ymdh};
+		jd = sg2::julian(atof(argv[2]));
+		d = sg2::date(jd.value);
+		ymdh = sg2::ymdh(jd.value);
+		ymdhmsn = sg2::ymdhmsn(d);
+		ydoyh = sg2::ydoyh(ymdh);
 	}
 
 	if (strcmp("--nsec", argv[1]) == 0) {
@@ -57,11 +57,11 @@ int main(int argc, char ** argv)
 			return 1;
 		}
 
-		d = sg2::date{static_cast<int64_t>(atoll(argv[2]))};
-		jd = sg2::julian{d};
-		ymdh = sg2::ymdh{jd.value};
-		ymdhmsn = sg2::ymdhmsn{d};
-		ydoyh = sg2::ydoyh{ymdh};
+		d = sg2::date(static_cast<int64_t>(atoll(argv[2])));
+		jd = sg2::julian(d);
+		ymdh = sg2::ymdh(jd.value);
+		ymdhmsn = sg2::ymdhmsn(d);
+		ydoyh = sg2::ydoyh(ymdh);
 	}
 
 	if (strcmp("--ymdh", argv[1]) == 0) {
@@ -71,10 +71,10 @@ int main(int argc, char ** argv)
 		}
 
 		ymdh = sg2::ymdh(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]), atof(argv[5]));
-		d = sg2::date{ymdh};
-		jd = sg2::julian{ymdh};
-		ymdhmsn = sg2::ymdhmsn{d};
-		ydoyh = sg2::ydoyh{ymdh};
+		d = sg2::date(ymdh);
+		jd = sg2::julian(ymdh);
+		ymdhmsn = sg2::ymdhmsn(d);
+		ydoyh = sg2::ydoyh(ymdh);
 	}
 
 	printf("jd ............ %f\n", jd.value);

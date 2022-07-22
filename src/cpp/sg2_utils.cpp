@@ -20,6 +20,7 @@
  */
 
 #include "sg2_utils.h"
+#include "sg2_constants.h"
 
 
 namespace sg2 {
@@ -62,7 +63,6 @@ polynomial_approx<5, 6> approx_deltat_msc = {
 			{{2050,2150}, 2000, {0.0, 0.0, 0.0, 1.0/312.5, 1.7148, -0.74-0.1-0.01}}
 		},
 };
-
 
 } // namepsace sg2
 

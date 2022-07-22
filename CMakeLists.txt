@@ -50,12 +50,11 @@ set(sg2_CPP_DIR "${sg2_DIR}/src/cpp")
 set(sg2_RESOURCES_DIR "${sg2_DIR}/resources")
 list(APPEND sg2_HEADERS
     include/sg2.h
-    include/sg2_typedef.h
+    include/sg2_constants.h
     include/sg2_date.h
-    include/sg2_topocentric.h
+    include/sg2_geopoint.h
     include/sg2_geocentric.h
-    include/sg2_math.h
-    include/sg2_err.h
+    include/sg2_topocentric.h
 )
 
 add_subdirectory(src)

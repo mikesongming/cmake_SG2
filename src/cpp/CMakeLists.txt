@@ -11,7 +11,7 @@ cmake_print_variables(CMAKE_ASM_NASM_FLAGS)
 add_library(sg2 STATIC)
 add_library(sg2::sg2 ALIAS sg2)
 target_sources(sg2
-    INTERFACE sg2_geocentric_data.hpp sg2_utils.h
+    INTERFACE sg2_geocentric_data.hpp
     PRIVATE sg2_geocentric_data.asm
     sg2.cpp sg2_date.cpp sg2_utils.cpp
     sg2_geopoint.cpp sg2_geocentric.cpp

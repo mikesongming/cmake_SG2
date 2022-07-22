@@ -56,7 +56,7 @@ SCENARIO("validate geocentric data loaded by NASM", "[sg2][nasm]")
             REQUIRE(sg2::_geocentric_data_count()  == gc_data.count );
         }
         THEN("sampled values are equal") {
-            constexpr unsigned size = 10;
+            const unsigned size = 10;
             auto l = GENERATE_COPY(take(size, random(0, static_cast<int>(gc_data.count))));
             INFO("line: " << l);
 

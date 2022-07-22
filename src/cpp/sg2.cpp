@@ -23,101 +23,103 @@
 #define SG2_C_
 
 #include "sg2.h"
+#include "sg2_math.h"
 
-#include <cmath>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <iostream>
+#include <limits>
+
 
 namespace sg2 {
 
 inline static double _clam(double x) {
-	return x - std::floor(x);
+   return x - std::floor(x);
 }
 
 std::tuple<date, date, date> sunrise(date const & d, geopoint const & gp)
 {
-//	static const double sun_rise_gamma = RAD(-0.8333);
-	static const double sun_rise_gamma = RAD(0.0);
-	// round nearest day a 0 UT
-	date d0{(d.msec/86400000)*86400000};
+	// static const double sun_rise_gamma = RAD(-0.8333);
+    static const double sun_rise_gamma = RAD(0.0);
+    // round nearest day a 0 UT
+    date d0((d.msec/86400000)*86400000);
 
-	date dp{d0.msec-86400000};
-	date dn{d0.msec+86400000};
+    date dp(d0.msec-86400000);
+    date dn(d0.msec+86400000);
 
-	geocentric_data geoc_dp{dp};
-	geocentric_data geoc_d0{d0};
-	geocentric_data geoc_dn{dn};
+    geocentric_data geoc_dp(dp);
+    geocentric_data geoc_d0(d0);
+    geocentric_data geoc_dn(dn);
 
-	// Eq A3
-	double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_d0.nu)/2.0/PI;
+    // Eq A3
+    double m0 = (geoc_d0.r_alpha - gp.lambda - geoc_d0.nu)/2.0/PI;
 
-	// Eq A4
-	double x0 = (sin(sun_rise_gamma)-sin(gp.phi)*sin(geoc_d0.delta))/(cos(gp.phi)*cos(geoc_d0.delta));
-	if (x0 > 1.0 || x0 < -1.0) {
-		return {date{std::numeric_limits<int64_t>::min()},
-				date{std::numeric_limits<int64_t>::min()},
-				date{std::numeric_limits<int64_t>::min()}};
-	}
-	double H0 = acos(x0);
+    // Eq A4
+    double x0 = (math::sin(sun_rise_gamma)-math::sin(gp.phi)*math::sin(geoc_d0.delta))/(math::cos(gp.phi)*math::cos(geoc_d0.delta));
+    if (x0 > 1.0 || x0 < -1.0) {
+       	return std::make_tuple(date(std::numeric_limits<int64_t>::min()),
+               					date(std::numeric_limits<int64_t>::min()),
+               					date(std::numeric_limits<int64_t>::min()));
+    }
+    double H0 = acos(x0);
 
-	// Eq. A5
-	double m1 = m0-H0/2.0/PI;
-	double m2 = m0+H0/2.0/PI;
+    // Eq. A5
+    double m1 = m0-H0/2.0/PI;
+    double m2 = m0+H0/2.0/PI;
 
-	m0 = _clam(m0);
-	m1 = _clam(m1);
-	m2 = _clam(m2);
+    m0 = _clam(m0);
+    m1 = _clam(m1);
+    m2 = _clam(m2);
 
-	double v0 = geoc_d0.nu + RAD(360.985647)*m0;
-	double v1 = geoc_d0.nu + RAD(360.985647)*m1;
-	double v2 = geoc_d0.nu + RAD(360.985647)*m2;
+    double v0 = geoc_d0.nu + RAD(360.985647)*m0;
+    double v1 = geoc_d0.nu + RAD(360.985647)*m1;
+    double v2 = geoc_d0.nu + RAD(360.985647)*m2;
 
-	double n0 = m0 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
-	double n1 = m1 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
-	double n2 = m2 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
+    double n0 = m0 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
+    double n1 = m1 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
+    double n2 = m2 + (geoc_d0.tt.msec-geoc_d0.ut.msec)/(86400e3);
 
-	double a0 = geoc_d0.r_alpha-geoc_dp.r_alpha;
+    double a0 = geoc_d0.r_alpha-geoc_dp.r_alpha;
 
-	if (a0 < 0.0)
-		a0 += 2.0*PI;
+    if (a0 < 0.0)
+       	a0 += 2.0*PI;
 
-	double a1 = geoc_d0.delta-geoc_dp.delta;
-	double b0 = geoc_dn.r_alpha-geoc_d0.r_alpha;
+    double a1 = geoc_d0.delta-geoc_dp.delta;
+    double b0 = geoc_dn.r_alpha-geoc_d0.r_alpha;
 
-	if (b0 < 0.0)
-		b0 += 2.0*PI;
+    if (b0 < 0.0)
+       	b0 += 2.0*PI;
 
-	double b1 = geoc_dn.delta-geoc_d0.delta;
-	double c0 = b0 - a0;
-	double c1 = b1 - a1;
+    double b1 = geoc_dn.delta-geoc_d0.delta;
+    double c0 = b0 - a0;
+    double c1 = b1 - a1;
 
-	double r_alpha_p0 = geoc_d0.r_alpha + n0*(a0+b0+c0*n0)/2.0;
-	double r_alpha_p1 = geoc_d0.r_alpha + n1*(a0+b0+c0*n1)/2.0;
-	double r_alpha_p2 = geoc_d0.r_alpha + n2*(a0+b0+c0*n2)/2.0;
+    double r_alpha_p0 = geoc_d0.r_alpha + n0*(a0+b0+c0*n0)/2.0;
+    double r_alpha_p1 = geoc_d0.r_alpha + n1*(a0+b0+c0*n1)/2.0;
+    double r_alpha_p2 = geoc_d0.r_alpha + n2*(a0+b0+c0*n2)/2.0;
 
-	double delta_p0 =   geoc_d0.delta   + n0*(a1+b1+c1*n0)/2.0;
-	double delta_p1 =   geoc_d0.delta   + n1*(a1+b1+c1*n1)/2.0;
-	double delta_p2 =   geoc_d0.delta   + n2*(a1+b1+c1*n2)/2.0;
+    double delta_p0 =   geoc_d0.delta   + n0*(a1+b1+c1*n0)/2.0;
+    double delta_p1 =   geoc_d0.delta   + n1*(a1+b1+c1*n1)/2.0;
+    double delta_p2 =   geoc_d0.delta   + n2*(a1+b1+c1*n2)/2.0;
 
-	double Hp0 = v0 + gp.lambda - r_alpha_p0;
-	double Hp1 = v1 + gp.lambda - r_alpha_p1;
-	double Hp2 = v2 + gp.lambda - r_alpha_p2;
+    double Hp0 = v0 + gp.lambda - r_alpha_p0;
+    double Hp1 = v1 + gp.lambda - r_alpha_p1;
+    double Hp2 = v2 + gp.lambda - r_alpha_p2;
 
-	double h0 = asin(sin(gp.phi)*sin(delta_p0)+cos(gp.phi)*cos(delta_p0)*cos(Hp0));
-	double h1 = asin(sin(gp.phi)*sin(delta_p1)+cos(gp.phi)*cos(delta_p1)*cos(Hp1));
-	double h2 = asin(sin(gp.phi)*sin(delta_p2)+cos(gp.phi)*cos(delta_p2)*cos(Hp2));
+    double h0 = math::asin(math::sin(gp.phi)*math::sin(delta_p0)+math::cos(gp.phi)*math::cos(delta_p0)*math::cos(Hp0));
+    double h1 = math::asin(math::sin(gp.phi)*math::sin(delta_p1)+math::cos(gp.phi)*math::cos(delta_p1)*math::cos(Hp1));
+    double h2 = math::asin(math::sin(gp.phi)*math::sin(delta_p2)+math::cos(gp.phi)*math::cos(delta_p2)*math::cos(Hp2));
 
-	double T = m0 - _clam(Hp0/2.0/PI+0.5)-0.5;
+    double T = m0 - _clam(Hp0/2.0/PI+0.5)-0.5;
 
-	double R = m1 + (h1-sun_rise_gamma)/(2.0*PI*cos(delta_p1)*cos(gp.phi)*sin(Hp1));
-	double S = m2 + (h2-sun_rise_gamma)/(2.0*PI*cos(delta_p2)*cos(gp.phi)*sin(Hp2));
+    double R = m1 + (h1-sun_rise_gamma)/(2.0*PI*math::cos(delta_p1)*math::cos(gp.phi)*math::sin(Hp1));
+    double S = m2 + (h2-sun_rise_gamma)/(2.0*PI*math::cos(delta_p2)*math::cos(gp.phi)*math::sin(Hp2));
 
-	return {geoc_d0.ut.msec+static_cast<int64_t>(R*86400e3),
-			geoc_d0.ut.msec+static_cast<int64_t>(T*86400e3),
-			geoc_d0.ut.msec+static_cast<int64_t>(S*86400e3)};
+    return std::make_tuple(geoc_d0.ut.msec+static_cast<int64_t>(R*86400e3),
+          					geoc_d0.ut.msec+static_cast<int64_t>(T*86400e3),
+          					geoc_d0.ut.msec+static_cast<int64_t>(S*86400e3));
+}
 
+topocentric_data sun_position(const geocentric_data & geoc, const geopoint & gp)
+{
+	return topocentric_data(geoc, gp);
 }
 
 }

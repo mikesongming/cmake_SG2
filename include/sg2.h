@@ -23,16 +23,18 @@
 #ifndef SG2_H_
 #define SG2_H_
 
-#include "sg2_typedef.h"
 #include "sg2_date.h"
+#include "sg2_geopoint.h"
 #include "sg2_geocentric.h"
 #include "sg2_topocentric.h"
+#include "sg2_constants.h"
 
 #include <tuple>
 
 namespace sg2 {
 
 std::tuple<date, date, date> sunrise(date const &, geopoint const &);
+topocentric_data sun_position(const geocentric_data &, const geopoint &);
 
 }
 

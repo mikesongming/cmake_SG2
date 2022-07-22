@@ -22,21 +22,23 @@
 #ifndef SRC_SG2_UTILS_HXX_
 #define SRC_SG2_UTILS_HXX_
 
-#include "sg2_typedef.h"
 #include "sg2_math.h"
 
 #include <array>
 
 namespace sg2 {
 
+// inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
+// inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
+
 template<int const N>
 struct sinusoidal_approx {
 	double j0;
 	double a;
 	double b;
-	array<double, N> a0;
-	array<double, N> ro;
-	array<double, N> phi;
+	std::array<double, N> a0;
+	std::array<double, N> ro;
+	std::array<double, N> phi;
 
 	double compute(double jd) const {
 		double jc = jd - j0;
@@ -85,8 +87,6 @@ extern sinusoidal_approx<1> approx_epsilon;
 extern sinusoidal_approx<0> approx_nu0;
 extern sinusoidal_approx<0> approx_M_0;
 extern polynomial_approx<5, 6> approx_deltat_msc;
-
-static double const Delta_tau = -9.9337353631981704e-005;
 
 } // namespace sg2
 

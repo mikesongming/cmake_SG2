@@ -23,13 +23,8 @@
 #ifndef SG2_TYPEDEF_HXX_
 #define SG2_TYPEDEF_HXX_
 
-#include <limits>
-
-#include <cmath>
 
 namespace sg2 {
-
-using namespace std;
 
 static constexpr double const PI = 3.1415926535897931;
 static constexpr double const D_PI = 6.2831853071795862;
@@ -47,18 +42,19 @@ static constexpr double const SOLAR_CONSTANT = 1362.0;
 /* Astronomical unit : annual average of the Sun-Earth distance (m) */
 static constexpr double const AU = 149597870691.0; /* +/- 6 m (McCarthy et Petit, 2003) */
 
-inline double CLAMP_0_2PI(double angle) { return ((angle)-std::floor((angle)/(D_PI))*(D_PI)); }
-inline double CLAMP_PI_PI(double angle) { return ((angle)-std::round((angle)/(D_PI))*(D_PI)); }
+/** 1970-01-01T12:00 **/
+static double const EPOCH_JD = 2440587.5;
 
-struct date;
-struct julian;
-struct ymdh;
-struct ydoyh;
+static double const Delta_tau = -9.9337353631981704e-005;
+
 struct ellps;
-
-struct geopoint;
-struct geocentric_data;
-struct topocentric_data;
+extern ellps const ELLPS_WGS84;
+extern ellps const ELLPS_RGF83;
+extern ellps const ELLPS_NTF;
+extern ellps const ELLPS_AA;
+extern ellps const ELLPS_SPA;
+extern ellps const ELLPS_NGP;
+extern ellps const ELLPS_SPHERE;
 
 } // namespace sg2
 
